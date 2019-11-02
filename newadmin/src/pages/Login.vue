@@ -40,6 +40,7 @@ export default {
     login() {
       // 输入框不能为空否则跳出函数
       if (!this.form.username || !this.form.password) {
+        // 弹窗提示
         this.$message.error("请输入手机号和密码");
         return;
       }
