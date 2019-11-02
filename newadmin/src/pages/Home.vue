@@ -1,48 +1,48 @@
 <template>
   <el-container class="wrapper">
     <el-aside width="200px">
-      <el-menu
-        default-active="2"
-        class="el-menu-vertical-demo"
-      >
-        <el-menu-item index="2">
+      <div class="logo">黑马头条</div>
+      <el-menu>
+        <el-menu-item index="2" @click="$router.push('/postlist')">
           <i class="el-icon-menu"></i>
-          <span slot="title">导航二</span>
+          <span slot="title">文章列表</span>
         </el-menu-item>
 
-        <el-menu-item index="4">
+        <el-menu-item index="4" @click="$router.push('/editpost')">
           <i class="el-icon-setting"></i>
-          <span slot="title">导航四</span>
+          <span slot="title">发布文章</span>
         </el-menu-item>
       </el-menu>
     </el-aside>
     <el-container>
       <el-header>
-           <img class="avatar" v-if="user.head_img" :src="$axios.defaults.baseURL + user.head_img" alt="">
-                <img class="avatar" v-else src="../assets/01.gif" alt="">
-                <span class="nickname">{{user.nickname}}</span>
+        <img class="avatar" v-if="user.head_img" :src="$axios.defaults.baseURL + user.head_img" alt />
+        <img class="avatar" v-else src="../assets/01.gif" alt />
+        <span class="nickname">{{user.nickname}}</span>
       </el-header>
-      <el-main>Main</el-main>
+      <el-main>
+        <router-view></router-view>
+      </el-main>
     </el-container>
   </el-container>
 </template>
 
 <script>
 export default {
-    data(){
-        return{
-            user:JSON.parse(localStorage.getItem('user'))
-        }
-    }
+  data() {
+    return {
+      user: JSON.parse(localStorage.getItem("user"))
+    };
+  }
 };
 </script>
 
 <style lang="less" scoped>
 .wrapper {
-    width: 100%;
-    position: absolute;
-    top: 0;
-    bottom: 0;
+  width: 100%;
+  position: absolute;
+  top: 0;
+  bottom: 0;
 }
 .el-header,
 .el-footer {
@@ -57,6 +57,12 @@ export default {
   color: #fff;
   text-align: center;
   line-height: 200px;
+  .logo {
+    height: 60px;
+    line-height: 60px;
+    text-align: center;
+    background: #000;
+  }
 }
 
 .el-main {
@@ -78,19 +84,19 @@ body > .el-container {
 .el-container:nth-child(7) .el-aside {
   line-height: 320px;
 }
-.el-header{
-    display: flex;
-    align-items: center;
-    justify-content: flex-end;
-    .avatar {
-        width: 48px;
-        height: 48px;
-        object-fit: cover;
-        border-radius: 50%;
-        margin-right: 10px;
-    }
-    .nickname {
-        font-weight: bold;
-    }
+.el-header {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  .avatar {
+    width: 48px;
+    height: 48px;
+    object-fit: cover;
+    border-radius: 50%;
+    margin-right: 10px;
+  }
+  .nickname {
+    font-weight: bold;
+  }
 }
 </style>
