@@ -42,22 +42,20 @@ export default {
       if (!this.form.username || !this.form.password) {
         this.$message.error("请输入手机号和密码");
         return;
-      };
+      }
       this.$axios({
-        url:'/login',
-        method:'post',
-        data:this.form
-      }).then(res=>{
-         console.log(res.data);
+        url: "/login",
+        method: "post",
+        data: this.form
+      }).then(res => {
+        console.log(res.data);
         // 如果登陆成功,需要将数据存在 localStorage 里面
-                if (res.data.message == "登录成功") {
-                    localStorage.setItem('token', res.data.data.token);
-                    localStorage.setItem('user', JSON.stringify(res.data.data.user));
-                   
-                    
-                   
-                }
-      })
+        if (res.data.message == "登录成功") {
+          localStorage.setItem("token", res.data.data.token);
+          localStorage.setItem("user", JSON.stringify(res.data.data.user));
+           this.$router.push('/');
+        }
+      });
     }
   }
 };

@@ -10,6 +10,19 @@ Vue.prototype.$axios = axios;
 
 //设置默认的 api 域名
 axios.defaults.baseURL = "http://127.0.0.1:3000"
+// 添加错误拦截
+router.beforeEach((to,from,next)=>{
+  if(to.path !='/login'){
+    const token=localStorage.getItem('token');
+    if(!token){
+      router.push('/login');
+    }else{
+      next();
+    }
+  }else{
+    next();
+  }
+})
 Vue.config.productionTip = false
 // 引入 ui 库
 import ElementUI from 'element-ui';
