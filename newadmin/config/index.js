@@ -9,7 +9,7 @@ module.exports = {
 
     // Paths
     assetsSubDirectory: 'static',
-    assetsPublicPath: '/newsadmin_dev/',
+    assetsPublicPath: '/',
     proxyTable: {},
 
     // Various Dev Server settings
