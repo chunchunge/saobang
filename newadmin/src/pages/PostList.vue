@@ -51,7 +51,8 @@
     </el-table>
      <el-pagination
     layout="prev, pager, next"
-    :total="50">
+    :total="50"
+     @current-change="changePage">
   </el-pagination>
     </div>
 </template>
@@ -85,6 +86,10 @@ export default {
           this.tableData=data;
           
         })
+      },
+      changePage(val){
+          this.pageIndex=val;
+          this.getPostList();
       }
     }
 }
