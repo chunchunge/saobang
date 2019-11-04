@@ -1,26 +1,42 @@
 <template>
-<div class="main">
-  <h3>首页/发布新闻</h3>
-   <el-row type="flex" justify="center" align="middle" class="wrapper">
-    <el-form ref="form" label-width="60px">
-      <el-form-item label="标题" class="title">
-        <el-input ></el-input>
-      </el-form-item>
-    </el-form>
-  </el-row>
-</div>
- 
+  <el-form ref="form" :model="form" label-width="80px">
+    <el-form-item label="标题">
+      <el-input v-model="form.title"></el-input>
+    </el-form-item>
+    <el-form-item label="类型">
+      <el-checkbox-group v-model="form.categories">
+        <el-checkbox 
+        v-for="(item,index) in categoryList" :key="index"
+        :label="item.id">
+          {{item.name}}
+        </el-checkbox>
+        </el-checkbox-group>
+    </el-form-item>
+  </el-form>
 </template>
 
 <script>
-export default {};
+export default {
+  data() {
+    return {
+      form: {
+        title: "",
+        categories:[]
+      },
+      categoryList:[]
+    };
+  },
+  mounted(){
+    // 获取所有数据
+    this.$axios({
+      url:'/category',
+      method:'get'
+    }).then(res=>{
+      const {data} =res.data;
+      this.categoryList=data;
+    })
+  }
+};
 </script>
 <style lang="less" scoped>
-  .main{
-    margin-left: 0;
-    position: absolute;
-    top:100px;
-    left:0;
-
-  }
 </style>
