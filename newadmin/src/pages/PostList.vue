@@ -50,9 +50,11 @@
     </el-table-column>
     </el-table>
      <el-pagination
-    layout="prev, pager, next"
-    :total="50"
-     @current-change="changePage">
+    layout="total, sizes, prev, pager, next"
+    :page-sizes="[2, 5, 10, 20]"
+    :total="100"
+     @current-change="changePage"
+     @size-change="changeSize">
   </el-pagination>
     </div>
 </template>
@@ -62,7 +64,8 @@ export default {
  data() {
         return {
          tableData:[],
-         pageIndex:1
+         pageIndex:1,
+         pageSize: 6
         }
       },
       mounted(){
@@ -79,7 +82,12 @@ export default {
          this.$axios({
           url:'/post',
           method:'get',
-          pageIndex:this.pageIndex
+          params:{
+             pageIndex:this.pageIndex,
+              // 这里要传入 pageSize 来决定我们每页获取多少条数据
+              pageSize: this.pageSize
+          }
+         
         }).then(res=>{
           const {data}=res.data;
           console.log(data);
@@ -90,6 +98,14 @@ export default {
       changePage(val){
           this.pageIndex=val;
           this.getPostList();
+      },
+      changeSize(val) {
+        // 这个事件也像是页码变更事件一样,
+        // 会传入一个参数,就是用户选择了的每页数据条数
+        // 1.修改每页条数数据
+        this.pageSize = val;
+        // 2.重新获取数据
+        this.getPostList();
       }
     }
 }
