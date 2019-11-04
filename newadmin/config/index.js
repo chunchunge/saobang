@@ -9,7 +9,7 @@ module.exports = {
 
     // Paths
     assetsSubDirectory: 'static',
-    assetsPublicPath: '/newadmin/saobang/',
+    assetsPublicPath: 'http://chunchunge.gitee.io/saobang',
     proxyTable: {},
 
     // Various Dev Server settings
