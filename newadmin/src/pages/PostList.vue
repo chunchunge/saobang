@@ -1,4 +1,5 @@
 <template>
+<div>
     <el-table
       :data="tableData"
       style="width: 100%">
@@ -48,25 +49,23 @@
       </template>
     </el-table-column>
     </el-table>
+     <el-pagination
+    layout="prev, pager, next"
+    :total="50">
+  </el-pagination>
+    </div>
 </template>
 
 <script>
 export default {
  data() {
         return {
-         tableData:[]
+         tableData:[],
+         pageIndex:1
         }
       },
       mounted(){
-        this.$axios({
-          url:'/post',
-          method:'get'
-        }).then(res=>{
-          const {data}=res.data;
-          console.log(data);
-          this.tableData=data;
-          
-        })
+       this.getPostList();
       },
     methods: {
       handleEdit(index, row) {
@@ -74,6 +73,18 @@ export default {
       },
       handleDelete(index, row) {
         console.log(index, row);
+      },
+      getPostList(){
+         this.$axios({
+          url:'/post',
+          method:'get',
+          pageIndex:this.pageIndex
+        }).then(res=>{
+          const {data}=res.data;
+          console.log(data);
+          this.tableData=data;
+          
+        })
       }
     }
 }
