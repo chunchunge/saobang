@@ -3,12 +3,12 @@
     <el-aside width="200px">
       <div class="logo">黑马头条</div>
       <el-menu>
-        <el-menu-item index="2" @click="$router.push('/postlist')">
+        <el-menu-item index="2" @click="jump('/postlist')">
           <i class="el-icon-menu"></i>
           <span slot="title">文章列表</span>
         </el-menu-item>
 
-        <el-menu-item index="4" @click="$router.push('/editpost')">
+        <el-menu-item index="4" @click="jump('/editpost')">
           <i class="el-icon-setting"></i>
           <span slot="title">发布文章</span>
         </el-menu-item>
@@ -33,6 +33,13 @@ export default {
     return {
       user: JSON.parse(localStorage.getItem("user"))
     };
+  },
+  methods:{
+    jump(path){
+      if(path !=this.$route.path){
+        this.$router.push(path);
+      }
+    }
   }
 };
 </script>
@@ -53,7 +60,7 @@ export default {
 }
 
 .el-aside {
-  background-color: #333;
+  background-color: skyblue;
   color: #fff;
   text-align: center;
   line-height: 200px;
