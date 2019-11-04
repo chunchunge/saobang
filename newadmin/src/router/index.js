@@ -13,6 +13,7 @@ export default new Router({
       path: '/',
       name: 'homePage',
       component: Home,
+      meta: "首页",
       // 嵌套子路由
       children:[
          // 嵌套子路由不能有以斜杠开头
@@ -20,12 +21,14 @@ export default new Router({
         {
           path: 'postlist',
           name: 'postlistPage',
-          component: PostList
+          component: PostList,
+          meta: "文章列表"
         },
         {
           path: 'editpost',
           name: 'editPostPage',
-          component: EditPost
+          component: EditPost,
+          meta: "编辑文章"
         }
       ]
 

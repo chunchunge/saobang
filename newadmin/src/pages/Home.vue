@@ -21,6 +21,7 @@
         <span class="nickname">{{user.nickname}}</span>
       </el-header>
       <el-main>
+        <breadcrumb/>
         <router-view></router-view>
       </el-main>
     </el-container>
@@ -28,7 +29,11 @@
 </template>
 
 <script>
+import breadcrumb from '../components/breadcrumb'
 export default {
+  components:{
+breadcrumb
+  },
   data() {
     return {
       user: JSON.parse(localStorage.getItem("user"))
@@ -75,8 +80,7 @@ export default {
 .el-main {
   background-color: #e9eef3;
   color: #333;
-  text-align: center;
-  line-height: 160px;
+
 }
 
 body > .el-container {
