@@ -41,7 +41,14 @@ export default {
       method:'get'
     }).then(res=>{
       const {data} =res.data;
-      this.categoryList=data;
+      // 这里我们需要过滤掉关注和头条
+      const newCategoryList=[];
+      data.forEach(element=>{
+        if(element.id !=0 && element.id !=999){
+          newCategoryList.push(element);
+        }
+      })
+      this.categoryList=newCategoryList;
     })
   },
     methods: {
