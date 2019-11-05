@@ -42,10 +42,6 @@
         <el-button
           size="mini"
           @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
-        <el-button
-          size="mini"
-          type="danger"
-          @click="handleDelete(scope.$index, scope.row)">删除</el-button>
       </template>
     </el-table-column>
     </el-table>
@@ -73,10 +69,14 @@ export default {
       },
     methods: {
       handleEdit(index, row) {
-        console.log(index, row);
-      },
-      handleDelete(index, row) {
-        console.log(index, row);
+          // 这里可以通过 row.id 获取到文章的 id 
+        // 我们只需要跳转的时候带上参数即可
+        this.$router.push({
+          path:'/editpost',
+          query: {
+            id: row.id
+          }
+        })
       },
       getPostList(){
          this.$axios({
