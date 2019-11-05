@@ -108,11 +108,14 @@ export default {
           newCategoryList.push(element.id);
         });
         data.categories = newCategoryList;
-        data.cover.forEach(element => {
+        data.cover.forEach((element,index) => {
           // 其中 element.url 是不完整的图片地址
           element.url = this.$fixImgUrl(element.url);
+          element.uid = index;
         });
-
+   // 如果是历史遗留数据, 带有 div 标签 
+                // 富文本框不能接受,就要使用 正则表达式来替换 div 为 p
+                data.content = data.content.replace(/div/g, 'p')
         this.form = data;
       });
     }
@@ -131,7 +134,7 @@ export default {
       console.log(this.form);
        // 现在要直接发送 ajax 请求发布文章
       this.$axios({
-        url: "/post",
+       url: this.postId?'/post_update/'+this.postId:'/post',
         method: "post",
         data: this.form
       }).then(res => {
