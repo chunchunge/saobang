@@ -20,7 +20,7 @@
         :editorToolbar="customToolbar"
       ></vue-editor>
     </el-form-item>
-      <el-form-item label="封面">
+    <el-form-item label="封面">
       <!-- 这个组件直接将我们上传图片的工作接管
             action 使我们上传图片的接口路径
             on-remove 当我们删除一个图片的时候会触发 
@@ -28,6 +28,7 @@
             这里在模板当中是没有办法直接获取我们的 localStorage 的
       需要现在 data 当中定义这个 token 这里在赋值-->
       <el-upload
+        :file-list="form.cover"
         :action="$axios.defaults.baseURL + '/upload/'"
         list-type="picture-card"
         :on-success="handleSuccess"
@@ -39,9 +40,9 @@
     </el-form-item>
     <el-form-item label="类型">
       <el-radio-group v-model="form.type">
-                <el-radio :label="1">文章</el-radio>
-                <el-radio :label="2">视频</el-radio>
-            </el-radio-group>
+        <el-radio :label="1">文章</el-radio>
+        <el-radio :label="2">视频</el-radio>
+      </el-radio-group>
     </el-form-item>
     <el-form-item>
       <el-button type="primary" @click="onSubmit">提交</el-button>
@@ -57,8 +58,8 @@ export default {
   },
   data() {
     return {
-        // 获取传递进来的文章id
-            postId: this.$route.query.id,
+      // 获取传递进来的文章id
+      postId: this.$route.query.id,
       token: localStorage.getItem("token"),
       form: {
         title: "",
@@ -91,27 +92,30 @@ export default {
       });
       this.categoryList = newCategoryList;
     });
-      // 如果能够拿到 this.postId 证明我们是在编辑文章,
-        // 我已应该使用 ajax 获取文章数据
-        if (this.postId) {
-            this.$axios({
-                url: '/post/'+ this.postId,
-                method: 'get'
-            }).then(res=>{
-                const {data} = res.data;
-                console.log(data);
-                // 处理我们的 categories 数据
-                // 将 [{id:1}] 改成 [1]
-                let newCategoryList = [];
-                data.categories.forEach(element => {
-                    newCategoryList.push(element.id)
-                });
-                data.categories = newCategoryList;
+    // 如果能够拿到 this.postId 证明我们是在编辑文章,
+    // 我已应该使用 ajax 获取文章数据
+    if (this.postId) {
+      this.$axios({
+        url: "/post/" + this.postId,
+        method: "get"
+      }).then(res => {
+        const { data } = res.data;
+        console.log(data);
+        // 处理我们的 categories 数据
+        // 将 [{id:1}] 改成 [1]
+        let newCategoryList = [];
+        data.categories.forEach(element => {
+          newCategoryList.push(element.id);
+        });
+        data.categories = newCategoryList;
+        data.cover.forEach(element => {
+          // 其中 element.url 是不完整的图片地址
+          element.url = this.$fixImgUrl(element.url);
+        });
 
-                this.form = data;
-                
-            })
-        }
+        this.form = data;
+      });
+    }
   },
   methods: {
     onSubmit() {
@@ -123,14 +127,17 @@ export default {
         });
       });
       this.form.categories = newArr;
-      const newArrCover = [];
-      this.form.cover.forEach(element => {
-        newArrCover.push({
-          id: element
-        });
-      });
-      this.form.cover = newArrCover;
+     
       console.log(this.form);
+       // 现在要直接发送 ajax 请求发布文章
+      this.$axios({
+        url: "/post",
+        method: "post",
+        data: this.form
+      }).then(res => {
+        const { data } = res.data;
+        console.log(data);
+      });
     },
     // 这里是富文本框添加图片触发的函数
     imgUpload(file, Editor, cursorLocation, resetUploader) {
@@ -163,18 +170,16 @@ export default {
       console.log("删除了图片");
     },
     handleSuccess(res) {
-      this.form.cover.push(res.data.id);
-      console.log(this.form);
-       // 现在要直接发送 ajax 请求发布文章
-            this.$axios({
-                url: '/post',
-                method: 'post',
-                data: this.form
-            }).then(res=>{
-                const {data} = res.data;
-                console.log(data);
-                
+       // this.form.cover.push(res.data.id)
+            // 这里不仅能拿到 id 还能拿到 uid 还能拿到我们的 url
+            // 直接就可以把它构造成最终 api 需要的格式,
+            // 无需等到罪追诉推送的时候再做
+            this.form.cover.push({
+                id: res.data.id,
+                url: this.$axios.defaults.baseURL + res.data.url
             })
+      console.log(this.form);
+     
     }
   }
 };
