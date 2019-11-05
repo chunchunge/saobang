@@ -16,6 +16,14 @@
             <el-radio v-model="form.type" label="1">文章</el-radio>
             <el-radio v-model="form.type" label="2">视频</el-radio>
         </el-form-item>
+         <el-form-item>
+            <vue-editor 
+            v-model="form.content"
+            :useCustomImageHandler="true"
+            @image-added="imgUpload"
+            :editorToolbar="customToolbar"
+            ></vue-editor>
+        </el-form-item>
       <el-form-item>
             <el-button type="primary" @click="onSubmit">提交</el-button>
         </el-form-item>
@@ -23,16 +31,23 @@
 </template>
 
 <script>
+import { VueEditor } from "vue2-editor";
 export default {
+   components: {
+        VueEditor
+    },
   data() {
     return {
       form: {
         title: "",
         categories:[],
-        type:1
+        type:"",
+         content: '<h1>没有内容</h1>'
       },
-      categoryList:[]
-    };
+      categoryList:[],
+       customToolbar: [["bold", "italic", "underline"], [{ list: "ordered" }, { list: "bullet" }], ["image", "code-block"]]
+        }
+    
   },
   mounted(){
     // 获取所有数据
@@ -62,6 +77,10 @@ export default {
            });
            this.form.categories=newArr;
                console.log(this.form);
+        },
+         // 这里是富文本框添加图片触发的函数
+        imgUpload() {
+            console.log('添加了图片');
         }
     }
 };
