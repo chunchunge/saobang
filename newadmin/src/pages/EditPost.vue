@@ -38,8 +38,10 @@
       </el-upload>
     </el-form-item>
     <el-form-item label="类型">
-      <el-radio v-model="form.type" label="1">文章</el-radio>
-      <el-radio v-model="form.type" label="2">视频</el-radio>
+      <el-radio-group v-model="form.type">
+                <el-radio :label="1">文章</el-radio>
+                <el-radio :label="2">视频</el-radio>
+            </el-radio-group>
     </el-form-item>
     <el-form-item>
       <el-button type="primary" @click="onSubmit">提交</el-button>
@@ -55,11 +57,13 @@ export default {
   },
   data() {
     return {
+        // 获取传递进来的文章id
+            postId: this.$route.query.id,
       token: localStorage.getItem("token"),
       form: {
         title: "",
         categories: [],
-        type: "",
+        type: 1,
         content: "<h1>没有内容</h1>",
         cover: []
       },
@@ -87,6 +91,27 @@ export default {
       });
       this.categoryList = newCategoryList;
     });
+      // 如果能够拿到 this.postId 证明我们是在编辑文章,
+        // 我已应该使用 ajax 获取文章数据
+        if (this.postId) {
+            this.$axios({
+                url: '/post/'+ this.postId,
+                method: 'get'
+            }).then(res=>{
+                const {data} = res.data;
+                console.log(data);
+                // 处理我们的 categories 数据
+                // 将 [{id:1}] 改成 [1]
+                let newCategoryList = [];
+                data.categories.forEach(element => {
+                    newCategoryList.push(element.id)
+                });
+                data.categories = newCategoryList;
+
+                this.form = data;
+                
+            })
+        }
   },
   methods: {
     onSubmit() {
