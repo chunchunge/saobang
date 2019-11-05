@@ -19,7 +19,7 @@
         label="缩略图"
         width="200">
         <template slot-scope="scope">
-          <img :src="scope.row.cover[0].url" class="thumbnail" alt="">
+         <img :src="$fixImgUrl(scope.row.cover[0].url)" alt="" class="thumbnail">
         </template>
       </el-table-column>
       <el-table-column

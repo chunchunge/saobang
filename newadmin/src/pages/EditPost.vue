@@ -20,21 +20,23 @@
         :editorToolbar="customToolbar"
       ></vue-editor>
     </el-form-item>
-     <el-form-item>
-            <!-- 这个组件直接将我们上传图片的工作接管
+      <el-form-item label="封面">
+      <!-- 这个组件直接将我们上传图片的工作接管
             action 使我们上传图片的接口路径
             on-remove 当我们删除一个图片的时候会触发 
             headers 使我们要带上请求时验证的 token
             这里在模板当中是没有办法直接获取我们的 localStorage 的
-            需要现在 data 当中定义这个 token 这里在赋值-->
-            <el-upload
-                :action="$axios.defaults.baseURL + '/upload/'"
-                list-type="picture-card"
-                :on-remove="handleRemove"
-                :headers="{Authorization:token}">
-                <i class="el-icon-plus"></i>
-            </el-upload>
-        </el-form-item>
+      需要现在 data 当中定义这个 token 这里在赋值-->
+      <el-upload
+        :action="$axios.defaults.baseURL + '/upload/'"
+        list-type="picture-card"
+        :on-success="handleSuccess"
+        :on-remove="handleRemove"
+        :headers="{Authorization:token}"
+      >
+        <i class="el-icon-plus"></i>
+      </el-upload>
+    </el-form-item>
     <el-form-item label="类型">
       <el-radio v-model="form.type" label="1">文章</el-radio>
       <el-radio v-model="form.type" label="2">视频</el-radio>
@@ -53,12 +55,13 @@ export default {
   },
   data() {
     return {
-      token: localStorage.getItem('token'),
+      token: localStorage.getItem("token"),
       form: {
         title: "",
         categories: [],
         type: "",
-        content: "<h1>没有内容</h1>"
+        content: "<h1>没有内容</h1>",
+        cover: []
       },
       categoryList: [],
       customToolbar: [
@@ -95,6 +98,13 @@ export default {
         });
       });
       this.form.categories = newArr;
+      const newArrCover = [];
+      this.form.cover.forEach(element => {
+        newArrCover.push({
+          id: element
+        });
+      });
+      this.form.cover = newArrCover;
       console.log(this.form);
     },
     // 这里是富文本框添加图片触发的函数
@@ -123,10 +133,25 @@ export default {
           console.log(err);
         });
     },
-      handleRemove() {
-            // 处理封面图插件,删除图片时的函数
-            console.log("删除了图片");
-  }}
+    handleRemove() {
+      // 处理封面图插件,删除图片时的函数
+      console.log("删除了图片");
+    },
+    handleSuccess(res) {
+      this.form.cover.push(res.data.id);
+      console.log(this.form);
+       // 现在要直接发送 ajax 请求发布文章
+            this.$axios({
+                url: '/post',
+                method: 'post',
+                data: this.form
+            }).then(res=>{
+                const {data} = res.data;
+                console.log(data);
+                
+            })
+    }
+  }
 };
 </script>
 <style lang="less" scoped>
