@@ -47,8 +47,14 @@ export default {
     methods: {
         onSubmit() {
             // 这里是提交的函数,但是我们现在还没有完整的数据,所以只是打印一下数据确认我们的操作
-            console.log(this.form);
-            
+           const newArr=[];
+           this.form.categories.forEach(element => {
+             newArr.push({
+               id:element
+             })
+           });
+           this.form.categories=newArr;
+               console.log(this.form);
         }
     }
 };
