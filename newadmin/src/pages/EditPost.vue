@@ -176,10 +176,51 @@ export default {
         method: "post",
         data: this.form
       }).then(res => {
-        const { data } = res.data;
-        console.log(data);
+        console.log(res.data.message);
+        if(res.data.message=="文章编辑成功"){
+          this.$router.push({
+        path: "/postlist",
+       
+      });
+             // 更新数据
+    this.$axios({
+      url: "/category",
+      method: "get"
+    }).then(res => {
+      const { data } = res.data;
+      // 这里我们的数据带有关注和头条分类,但是这两个分类并不需要我们手动设置
+      // 我们需要过滤掉这两个分类
+      const newCategoryList = [];
+      data.forEach(element => {
+        if (element.id != 0 && element.id != 999) {
+          newCategoryList.push(element);
+        }
+      });
+      this.categoryList = newCategoryList;
+    });
+        }
+        
       });
     },
+    getposts(){
+      // 一进来就获取分类数据渲染多选框
+    this.$axios({
+      url: "/category",
+      method: "get"
+    }).then(res => {
+      const { data } = res.data;
+      // 这里我们的数据带有关注和头条分类,但是这两个分类并不需要我们手动设置
+      // 我们需要过滤掉这两个分类
+      const newCategoryList = [];
+      data.forEach(element => {
+        if (element.id != 0 && element.id != 999) {
+          newCategoryList.push(element);
+        }
+      });
+      this.categoryList = newCategoryList;
+    });
+    },
+     
     // 这里是富文本框添加图片触发的函数
     imgUpload(file, Editor, cursorLocation, resetUploader) {
       // An example of using FormData
