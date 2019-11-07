@@ -1,6 +1,10 @@
 <template>
   <div>
     <el-table :data="tableData" style="width: 100%">
+      <!-- :data 就是我们的文章数组 -->
+
+      <!-- label 就是表头
+      width就是列宽度-->
       <el-table-column label="id" width="60">
         <template slot-scope="scope">
           <!-- scope 就是传进来的整个数据数组
@@ -11,28 +15,35 @@
           <span style="margin-left: 10px">{{ scope.row.id }}</span>
         </template>
       </el-table-column>
+
       <el-table-column label="缩略图" width="200">
         <template slot-scope="scope">
           <img :src="$fixImgUrl(scope.row.cover[0].url)" alt class="thumbnail" />
         </template>
       </el-table-column>
+
       <el-table-column label="标题" width="500">
         <template slot-scope="scope">
-          <i class="el-icon-time"></i>
-          <span style="margin-left: 10px">{{scope.row.title}}</span>
+          <span style="margin-left: 10px">{{ scope.row.title }}</span>
         </template>
       </el-table-column>
+
       <el-table-column label="作者" width="100">
         <template slot-scope="scope">
           <span style="margin-left: 10px">{{ scope.row.user.nickname || '未命名' }}</span>
         </template>
       </el-table-column>
+
       <el-table-column label="操作">
         <template slot-scope="scope">
           <el-button size="mini" @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
         </template>
       </el-table-column>
     </el-table>
+
+    <!-- current-change 是页码变更时会触发的事件,我们需要监听并调用一个函数 -->
+    <!-- page-sizes 是决定可以有什么选项给用户选择,每页有多少数据 -->
+    <!-- layout 下面的 sizes 是决定我们显示这个页面数据条数选择起的选项 -->
     <el-pagination
       layout="total, sizes, prev, pager, next"
       :page-sizes="[2, 5, 10, 20]"
@@ -49,14 +60,16 @@ export default {
     return {
       tableData: [],
       pageIndex: 1,
-      pageSize: 6
+      pageSize: 10
     };
   },
   mounted() {
     this.getPostList();
   },
   methods: {
+    // 这两个是 饿了么 ui 创建的函数
     handleEdit(index, row) {
+      console.log(row);
       // 这里可以通过 row.id 获取到文章的 id
       // 我们只需要跳转的时候带上参数即可
       this.$router.push({
@@ -66,6 +79,7 @@ export default {
         }
       });
     },
+
     getPostList() {
       this.$axios({
         url: "/post",
@@ -81,8 +95,12 @@ export default {
         this.tableData = data;
       });
     },
+
     changePage(val) {
+      // 1.改变当前页码 pageIndex,
+      // 2.这个事件会传递一个参数,就是点击了的页码
       this.pageIndex = val;
+      // 3.重新获取列表数据
       this.getPostList();
     },
     changeSize(val) {
@@ -96,6 +114,7 @@ export default {
   }
 };
 </script>
+
 <style lang="less" scoped>
 .thumbnail {
   width: 200px;
